@@ -7,6 +7,8 @@ import com.spring.ems.repository.TicketRepository;
 import com.spring.ems.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
@@ -27,19 +29,9 @@ public class TicketService {
                 request.priority()
         );
         ticket.setCustomer(user);
-
         ticketRepository.save(ticket);
 
-        return new TicketResponse(
-                ticket.getId(),
-                ticket.getTitle(),
-                ticket.getDescription(),
-                ticket.getPriority(),
-                ticket.getStatus(),
-                ticket.getCustomer().getFirstName(),
-                null,
-                ticket.getCreatedAt()
-        );
+        return toResponse(ticket);
     }
 
     public TicketResponse assignTicketToAgent(Long ticketId, Long agentId) {
@@ -66,14 +58,38 @@ public class TicketService {
         ticketRepository.save(ticket);
         userRepository.save(supportAgent);
 
+        return toResponse(ticket);
+    }
+
+    public List<TicketResponse> getAllTickets() {
+        return ticketRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public TicketResponse updateTicketStatus(Long ticketId, Status newStatus) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+
+        if(ticket.getStatus().equals(Status.CLOSED)){
+            throw new RuntimeException("Cannot change the state of a closed ticket");
+        }
+        ticket.setStatus(newStatus);
+
+        return toResponse(ticket);
+    }
+
+    private TicketResponse toResponse(Ticket ticket) {
+        String customerName =  ticket.getCustomer() != null ? ticket.getCustomer().getFirstName() : null;
+        String agentName = ticket.getAssignedAgent() != null ? ticket.getAssignedAgent().getFirstName() : null;
         return new TicketResponse(
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getDescription(),
                 ticket.getPriority(),
                 ticket.getStatus(),
-                ticket.getCustomer().getFirstName(),
-                supportAgent.getFirstName(),
+                customerName,
+                agentName,
                 ticket.getCreatedAt()
         );
     }
