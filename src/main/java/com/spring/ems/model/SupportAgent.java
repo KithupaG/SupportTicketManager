@@ -1,8 +1,8 @@
 package com.spring.ems.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
@@ -16,13 +16,16 @@ public class SupportAgent extends User {
     @Column(nullable = false)
     private int currentActiveTickets = 0;
 
-    protected SupportAgent() {}
+    @OneToMany(mappedBy = "assignedAgent")
+    private List<Ticket> tickets;
 
-    public SupportAgent(String email, String password, String firstName, String lastName, Role role, String department, int maxActiveTickets, int currentActiveTickets) {
+    protected SupportAgent() {
+    }
+
+    public SupportAgent(String email, String password, String firstName, String lastName, Role role, String department, int maxActiveTickets) {
         super(email, password, firstName, lastName, role);
         this.department = department;
         this.maxActiveTickets = maxActiveTickets;
-        this.currentActiveTickets = currentActiveTickets;
     }
 
     public String getDepartment() {
@@ -41,11 +44,15 @@ public class SupportAgent extends User {
         this.maxActiveTickets = maxActiveTickets;
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
     public int getCurrentActiveTickets() {
         return currentActiveTickets;
     }
 
-    public void getCurrentActiveTickets(int currentActiveTickets) {
+    public void setCurrentActiveTickets(int currentActiveTickets) {
         this.currentActiveTickets = currentActiveTickets;
     }
 }

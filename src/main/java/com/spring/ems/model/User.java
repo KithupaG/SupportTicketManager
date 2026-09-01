@@ -3,6 +3,7 @@ package com.spring.ems.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +33,12 @@ public class User {
 
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "author")
+    private List<TicketComment> ticketComments;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -45,7 +52,7 @@ public class User {
 
     protected User() {}
 
-    public User(String email, String passsword, String firstName, String lastName, Role role) {
+    public User(String email, String password, String firstName, String lastName, Role role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
