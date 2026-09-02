@@ -1,6 +1,7 @@
 package com.spring.ems.controller;
 
 import com.spring.ems.dto.AssignTicketRequest;
+import com.spring.ems.dto.StatusUpdateRequest;
 import com.spring.ems.dto.TicketRequest;
 import com.spring.ems.dto.TicketResponse;
 import com.spring.ems.service.TicketService;
@@ -19,20 +20,20 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<TicketService> createTicket(@RequestBody TicketRequest request) {
+    public ResponseEntity<TicketResponse> createTicket(@RequestBody TicketRequest request) {
         Long customerId = 1L;
         TicketResponse created = ticketService.createTicket(customerId, request);
         return ResponseEntity.ok(created);
     }
 
     @PostMapping("/{ticketId}/assign")
-    public ResponseEntity<TicketService> assignTicketToAgent(@PathVariable Long ticketId, @RequestBody AssignTicketRequest request) {
+    public ResponseEntity<TicketResponse> assignTicketToAgent(@PathVariable Long ticketId, @RequestBody AssignTicketRequest request) {
         TicketResponse assigned = ticketService.assignTicketToAgent(ticketId, request.agentId());
         return ResponseEntity.ok(assigned);
     }
 
     @PostMapping("/{ticketId}/status")
-    public ResponseEntity<TicketService> updateTicketStatus(@PathVariable Long ticketId, @RequestBody TicketRequest request) {
+    public ResponseEntity<TicketResponse> updateTicketStatus(@PathVariable Long ticketId, @RequestBody StatusUpdateRequest request) {
         TicketResponse updated = ticketService.updateTicketStatus(ticketId, request.status());
         return ResponseEntity.ok(updated);
     }
