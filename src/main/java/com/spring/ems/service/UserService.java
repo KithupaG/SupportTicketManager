@@ -5,6 +5,8 @@ import com.spring.ems.model.User;
 import com.spring.ems.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository; // Making this private means no one can access and hidden from everyone else, and the final means no one can reassign it after spring assigns a value to it
@@ -23,6 +25,12 @@ public class UserService {
                 user.getLastName(),
                 user.getRole()
         );
+    }
+
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(u -> new UserResponse(u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(), u.getRole())).toList();
     }
 
     public UserResponse getUserResponseByEmail(String email) {
