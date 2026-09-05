@@ -1,4 +1,4 @@
-import {useAuth} from "../contexts/AuthContext.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 
@@ -57,11 +57,11 @@ export default function Register() {
                 </label>
                 <label>
                     First Name
-                    <input name="firstName" type="firstName" value={form.firstName} onChange={updateField} required/>
+                    <input name="firstName" type="text" value={form.firstName} onChange={updateField} required/>
                 </label>
                 <label>
                     Last Name
-                    <input name="lastName" type="lastName" value={form.lastName} onChange={updateField} required/>
+                    <input name="lastName" type="text" value={form.lastName} onChange={updateField} required/>
                 </label>
 
                 {form.role === 'CUSTOMER' && (
