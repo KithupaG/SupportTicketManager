@@ -5,8 +5,10 @@ import com.spring.ems.dto.StatusUpdateRequest;
 import com.spring.ems.dto.TicketRequest;
 import com.spring.ems.dto.TicketResponse;
 import com.spring.ems.service.TicketService;
+import com.spring.ems.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -14,14 +16,17 @@ import java.util.List;
 @RequestMapping("/api/tickets")
 public class TicketController {
     private final TicketService ticketService;
+    private final UserService userService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, UserService userService) {
         this.ticketService = ticketService;
+        this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity<TicketResponse> createTicket(@RequestBody TicketRequest request) {
-        Long customerId = 1L;
+    public ResponseEntity<TicketResponse> createTicket(Authentication authentication, d .@RequestBody TicketRequest request) {
+        String email = authentication.getName();
+        Long customerId = userService.getUserResponseByEmail(email).id();
         TicketResponse created = ticketService.createTicket(customerId, request);
         return ResponseEntity.ok(created);
     }
