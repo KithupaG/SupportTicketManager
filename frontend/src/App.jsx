@@ -5,6 +5,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
+import Tickets from "./pages/Tickets.jsx";
+import NewTicket from "./pages/NewTicket.jsx";
+import TicketDetail from "./pages/TicketDetail.jsx";
 
 export default function App() {
     return (
@@ -23,6 +26,21 @@ export default function App() {
                             <RequireRole role="ADMIN">
                                 <Admin/>
                             </RequireRole>
+                        </RequireAuth>
+                    }/>
+                    <Route path="/tickets" element={
+                        <RequireAuth>
+                            <Tickets />
+                        </RequireAuth>
+                    }/>
+                    <Route path="/tickets/new" element={
+                        <RequireAuth>
+                            <NewTicket />
+                        </RequireAuth>
+                    }/>
+                    <Route path="/tickets/:id" element={
+                        <RequireAuth>
+                            <TicketDetail />
                         </RequireAuth>
                     }/>
                     <Route path="*" element={<Navigate to="/" replace/>}/>

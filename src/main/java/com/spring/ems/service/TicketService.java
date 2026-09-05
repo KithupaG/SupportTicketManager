@@ -79,6 +79,12 @@ public class TicketService {
         return toResponse(ticket);
     }
 
+    public TicketResponse getAllTicketById(Long ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        return toResponse(ticket);
+    }
+
     private TicketResponse toResponse(Ticket ticket) {
         String customerName =  ticket.getCustomer() != null ? ticket.getCustomer().getFirstName() : null;
         String agentName = ticket.getAssignedAgent() != null ? ticket.getAssignedAgent().getFirstName() : null;
